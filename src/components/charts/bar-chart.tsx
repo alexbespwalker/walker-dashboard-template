@@ -1,6 +1,6 @@
 "use client"
 
-import { Bar, BarChart, XAxis, YAxis, CartesianGrid } from "recharts"
+import { Bar, BarChart, XAxis, YAxis, CartesianGrid, Cell } from "recharts"
 import {
   ChartContainer,
   ChartTooltip,
@@ -62,7 +62,7 @@ export function SimpleBarChart({
           <ChartTooltip content={<ChartTooltipContent />} cursor={{ fill: 'rgba(255,255,255,0.03)' }} />
           <Bar dataKey="value" radius={[6, 6, 0, 0]} opacity={0.92}>
             {colored.map((entry) => (
-              <rect key={entry.name} fill={entry.fill} />
+              <Cell key={entry.name} fill={`url(#gradient-bar-${entry.name.replace(/\s+/g, '-')})`} />
             ))}
           </Bar>
         </BarChart>

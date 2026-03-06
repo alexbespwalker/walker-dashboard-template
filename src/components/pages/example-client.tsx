@@ -4,9 +4,11 @@ import { useMemo, useState } from "react"
 import type { ExampleRow } from "@/lib/queries"
 import { aggregateByPeriod } from "@/lib/aggregation"
 import { useFilters } from "@/hooks/use-filters"
+import { useInView } from "@/hooks/use-in-view"
 import { FilterPanel } from "@/components/dashboard/filter-panel"
 import { MultiSelect } from "@/components/dashboard/multi-select"
 import { MetricCard } from "@/components/dashboard/metric-card"
+import { DataFreshness } from "@/components/dashboard/data-freshness"
 import { StackedBarChart } from "@/components/charts/stacked-bar-chart"
 import { DataTable } from "@/components/tables/data-table"
 import { CsvExport } from "@/components/dashboard/csv-export"
@@ -15,6 +17,7 @@ import { PRIMARY } from "@/lib/constants"
 
 export function ExampleClient({ data }: { data: ExampleRow[] }) {
   const { granularity, dateRange } = useFilters()
+  const chartRef = useInView<HTMLDivElement>()
 
   const allCategories = useMemo(
     () => [...new Set(data.map((r) => r.category))].sort(),
@@ -80,9 +83,12 @@ export function ExampleClient({ data }: { data: ExampleRow[] }) {
   return (
     <ErrorBoundary>
       <div>
-        <h1 className="text-2xl font-bold mb-1 text-foreground tracking-tight">
-          Example Page
-        </h1>
+        <div className="flex items-center justify-between mb-1">
+          <h1 className="text-2xl font-bold text-foreground tracking-tight">
+            Example Page
+          </h1>
+          <DataFreshness lastUpdated={maxDate} />
+        </div>
         <p className="text-sm text-muted-foreground/80 mb-6">
           Replace this with your actual page content
         </p>
@@ -124,7 +130,7 @@ export function ExampleClient({ data }: { data: ExampleRow[] }) {
         </div>
 
         {chartData.length > 0 && (
-          <div className="mb-8 animate-in fade-in slide-in-from-bottom-4 fill-mode-both duration-700" style={{ animationDelay: "300ms" }}>
+          <div ref={chartRef} className="mb-8 scroll-reveal">
             <StackedBarChart
               data={chartData}
               keys={keys}

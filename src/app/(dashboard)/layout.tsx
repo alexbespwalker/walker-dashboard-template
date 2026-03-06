@@ -19,7 +19,7 @@ export default async function DashboardLayout({
         <div className="pointer-events-none fixed inset-0 overflow-hidden z-0">
           <div
             className="absolute -top-[200px] -right-[200px] w-[600px] h-[600px] rounded-full blur-[120px]"
-            style={{ backgroundColor: `${PRIMARY}05` }}
+            style={{ backgroundColor: `${PRIMARY}03` }}
           />
         </div>
         <main className="relative z-10 p-8">
