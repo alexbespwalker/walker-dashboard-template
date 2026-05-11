@@ -9,6 +9,9 @@ name: Smoke Tests (PROD)
 on:
   deployment_status:
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
 jobs:
   smoke:
     if: >-
