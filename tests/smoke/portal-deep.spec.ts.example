@@ -1,0 +1,114 @@
+/**
+ * L2 + L3 Deep Smoke Tests — STARTER TEMPLATE.
+ *
+ * Walker-wide standard (codified 2026-05-11): every prod project with
+ * stakeholders runs L1 + L2 (filter/recency) + L3 (action paths with paired
+ * revert) tests on every Vercel deploy.
+ *
+ * **Rename this file to `portal-deep.spec.ts` and customize per project.**
+ * The `.example` extension prevents it from running as-is — the placeholder
+ * selectors below will fail against any real dashboard.
+ *
+ * REFERENCE IMPLEMENTATION: walker-brain-next/tests/smoke/portal-deep.spec.ts
+ * has 15 working tests (6 L2 + 4 L3 + 5 expansion) covering:
+ *   L2: date filter, full-text search same-day, brand filter, case type filter,
+ *       language filter, sort by quality, empty state, sidebar badge counts,
+ *       status tab shift, today's-picks metric
+ *   L3: batch publish flow (with paired revert), admin action visibility,
+ *       form rendering, unauthenticated /admin block, click-to-detail
+ *
+ * COPY-CUSTOMIZE PATTERN: pull walker-brain-next/tests/smoke/portal-deep.spec.ts
+ * into your project, change selectors to match your dashboard, rename this
+ * file. ~20 min of work per project.
+ *
+ * CI runtime budget: stay under 10-min GH Actions timeout. walker-brain-next
+ * at 21 total tests runs in ~3.2 min — you have plenty of headroom.
+ */
+import { test, expect, type Page } from "@playwright/test";
+
+const QA_EMAIL = process.env.QA_EMAIL;
+const QA_PASSWORD = process.env.QA_PASSWORD;
+if (!QA_EMAIL || !QA_PASSWORD) {
+  throw new Error("QA_EMAIL and QA_PASSWORD env vars required.");
+}
+
+async function login(page: Page) {
+  await page.goto("/login");
+  await page.fill("#email", QA_EMAIL!);
+  await page.fill("#password", QA_PASSWORD!);
+  await page.getByRole("button", { name: "Sign In" }).last().click();
+  // TODO: match your DEFAULT_ROUTE
+  await page.waitForURL("**/calls", { timeout: 15_000 });
+}
+
+// =============================================================================
+// L2 — Filtering & Recency (read-only, safe against prod)
+// =============================================================================
+
+test.describe("L2 — Filtering & Recency", () => {
+  test("L2.1: Primary filter narrows visible rows", async ({ page }) => {
+    await login(page);
+    // TODO: navigate to your filterable page
+    await page.goto("/calls");
+    await page.waitForLoadState("networkidle");
+
+    // TODO: count items before filter
+    // TODO: apply a filter (e.g., set date range, select brand)
+    // TODO: count items after filter
+    // TODO: assert after <= before
+
+    await expect(page.getByText("Something went wrong")).not.toBeVisible();
+  });
+
+  test("L2.2: Empty state renders when filters produce zero results", async ({ page }) => {
+    await login(page);
+    await page.goto("/calls");
+    await page.waitForLoadState("networkidle");
+
+    // TODO: apply impossible filter (e.g., date range with no data)
+    // TODO: assert "no results" UI or zero-row count
+    await expect(page.getByText("Something went wrong")).not.toBeVisible();
+  });
+
+  // TODO: add 3-4 more L2 tests — match your dashboard's actual filters,
+  // sort options, recency/badge widgets. See walker-brain-next/tests/smoke/
+  // portal-deep.spec.ts for full 11-test L2 reference.
+});
+
+// =============================================================================
+// L3 — Actions & DB state changes (PAIRED REVERT MANDATORY)
+// =============================================================================
+
+test.describe("L3 — Actions & DB state", () => {
+  test("L3.1: Decision-flow action lands AND reverts cleanly", async ({ page }) => {
+    await login(page);
+    await page.goto("/your-action-page"); // TODO
+
+    // PATTERN — paired revert:
+    //   1. Find eligible item (test.skip if none — keeps suite green on
+    //      edge prod states)
+    //   2. Capture initial state
+    //   3. Trigger action (click button, submit form)
+    //   4. Assert new state (UI re-render OR DB cross-check via service_role)
+    //   5. **Trigger inverse action to restore initial state**
+    //   6. Assert restored
+    //
+    // Walker rule: every L3 mutation MUST be paired with inverse. Prevents
+    // audit-log pollution + skewed stakeholder metrics.
+
+    test.skip(); // TODO: implement
+  });
+
+  test("L3.2: Unauthenticated user blocked from admin route", async ({ page }) => {
+    // No login. Direct nav to admin-only path.
+    const response = await page.goto("/admin", { waitUntil: "domcontentloaded" });
+    const url = page.url();
+    const status = response?.status() ?? 0;
+    const redirectedToLogin = url.includes("/login") || url.includes("/auth");
+    const blocked = status === 401 || status === 403;
+    expect(redirectedToLogin || blocked).toBe(true);
+  });
+
+  // TODO: add 1-2 more L3 tests. Stakeholder-facing decision flows are highest
+  // value (approve/reject content, publish/dismiss, etc.).
+});
