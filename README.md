@@ -6,7 +6,7 @@ Next.js 16 dashboard template with glassmorphism dark theme, JWT auth, Supabase 
 
 ```bash
 # 1. Clone and rename
-git clone https://github.com/alexbespwalker/walker-dashboard-template.git my-dashboard
+git clone https://github.com/walker-marketing-analytics/walker-dashboard-template.git my-dashboard
 cd my-dashboard
 
 # 2. Install
