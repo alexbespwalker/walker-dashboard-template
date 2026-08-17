@@ -25,7 +25,7 @@ cp .env.example .env.local
 npm run build
 
 # 6. Deploy
-npx vercel --prod
+# Deploys ride the marketing-analytics portal (Azure). New dashboards follow walker-workspace/docs/operations/drop-intake-SOP.md. No Vercel.
 ```
 
 ## What's Included
@@ -43,9 +43,11 @@ npx vercel --prod
 - Data freshness indicator
 - Supabase pagination for large datasets
 
-## Deploy to Vercel
+## Deploy
 
-Set these environment variables in Vercel:
+Deploys ride the marketing-analytics portal (Azure). New dashboards follow walker-workspace/docs/operations/drop-intake-SOP.md. No Vercel.
+
+Set these environment variables in the Azure app:
 
 | Variable | Value |
 |----------|-------|
