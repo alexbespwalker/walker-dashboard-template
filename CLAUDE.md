@@ -11,7 +11,7 @@ Reusable Next.js dashboard template for Walker Advertising. Clone and customize 
 - Recharts (stacked bar, donut, gradient bar)
 - Supabase JS (configurable schema)
 - jose (JWT httpOnly cookie auth, 24h)
-- Vercel deployment
+- Deploys ride the marketing-analytics portal (Azure). New dashboards follow walker-workspace/docs/operations/drop-intake-SOP.md. No Vercel.
 
 ## How to Create a New Dashboard from This Template
 
@@ -32,7 +32,7 @@ Reusable Next.js dashboard template for Walker Advertising. Clone and customize 
    e. Create `src/components/pages/<page-name>-client.tsx` (client component with charts/tables)
 6. Delete the `/example` page once your real pages are ready
 7. Run `npm install && npx next build` to verify
-8. Deploy: `npx vercel --prod` from project root
+8. Deploy: Deploys ride the marketing-analytics portal (Azure). New dashboards follow walker-workspace/docs/operations/drop-intake-SOP.md. No Vercel.
 
 ## Architecture Pattern
 
@@ -103,20 +103,18 @@ npm run dev          # Dev server (http://localhost:3000)
 npm run build        # Production build (verify before deploy)
 npm run typecheck    # TypeScript strict-check (CI Gates step)
 npm run test:smoke   # Run Playwright smoke suite locally (requires QA_EMAIL + QA_PASSWORD in .env.local)
-npx vercel --prod    # Deploy to Vercel
+# Deploys ride the marketing-analytics portal (Azure). New dashboards follow walker-workspace/docs/operations/drop-intake-SOP.md. No Vercel.
 ```
 
 ## Deep Prod Regression Testing (Walker-wide standard, codified 2026-05-11)
 
-**Every dashboard built from this template MUST run L1+L2+L3 smoke tests on every Vercel deploy.** This is the Walker bar — "did the tool answer the stakeholder's question," not "did the page load." See workspace `CLAUDE.md` + `~/.claude/rules/behavioral/walker-engineering.md` for the full standard, and `~/.claude/projects/.../memory/project_walker_deep_prod_test_pattern.md` for the reference doc.
+**Every dashboard built from this template MUST run L1+L2+L3 smoke tests on every deploy.** This is the Walker bar — "did the tool answer the stakeholder's question," not "did the page load." Deploys ride the marketing-analytics portal (Azure). New dashboards follow walker-workspace/docs/operations/drop-intake-SOP.md. No Vercel. See workspace `CLAUDE.md` + `~/.claude/rules/behavioral/walker-engineering.md` for the full standard, and `~/.claude/projects/.../memory/project_walker_deep_prod_test_pattern.md` for the reference doc.
 
 ### What ships with this template
 
 - `playwright.config.ts` — Playwright config, points at `PLAYWRIGHT_TEST_BASE_URL` from CI
 - `tests/smoke/portal.spec.ts` — L1 starter (auth + page load + console errors). 3 tests, ready to run after the 3 TODO customizations.
 - `tests/smoke/portal-deep.spec.ts.example` — L2+L3 starter template with TODOs. **Rename to `portal-deep.spec.ts`** and customize per project. Reference: `walker-brain-next/tests/smoke/portal-deep.spec.ts` (15 working tests).
-- `.github/workflows/smoke-tests.yml` — fires on Vercel Production deploy
-- `.github/workflows/preview-smoke.yml` — fires on Vercel preview deploy (non-blocking first week)
 
 ### Adoption checklist for a new project
 
@@ -125,10 +123,9 @@ npx vercel --prod    # Deploy to Vercel
 3. **`mv tests/smoke/portal-deep.spec.ts.example tests/smoke/portal-deep.spec.ts`** then customize the L2+L3 stubs to match your filters + decision-flow actions. ~30-60 min using `walker-brain-next/tests/smoke/portal-deep.spec.ts` as reference.
 4. **Add CI secrets to your new repo:**
    - `QA_EMAIL` + `QA_PASSWORD` — required (Walker QA user creds)
-   - `VERCEL_AUTOMATION_BYPASS_SECRET` — optional (only if Vercel deployment protection is on)
    - `SUPABASE_SERVICE_ROLE_KEY` — optional (only if your L2/L3 needs DB cross-checks)
-5. **Update `playwright.config.ts`** — replace `https://your-dashboard.vercel.app` baseURL fallback with your prod URL after first Vercel deploy.
-6. First deploy to Vercel triggers smoke tests automatically. Watch the run + iterate.
+5. **Update `playwright.config.ts`** — set the `baseURL` fallback to the Azure portal URL (`https://marketing.walkeradvertising.com` or the dashboard's Azure path).
+6. Deploys ride the marketing-analytics portal (Azure). New dashboards follow walker-workspace/docs/operations/drop-intake-SOP.md. No Vercel.
 
 ### Three-tier coverage (what each tier catches)
 
