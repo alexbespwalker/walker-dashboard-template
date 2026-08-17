@@ -22,7 +22,7 @@ export default defineConfig({
     baseURL:
       process.env.PLAYWRIGHT_TEST_BASE_URL ||
       // TODO: replace with your project's prod URL after first Vercel deploy
-      "https://your-dashboard.vercel.app",
+      "https://marketing.walkeradvertising.com",
     trace: "on-first-retry",
     screenshot: "only-on-failure",
     // Optional: set VERCEL_AUTOMATION_BYPASS_SECRET in CI if your project has
